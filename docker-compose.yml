@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  warp:
+    image: warp-gateway
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+    networks:
+      warpnet:
+        ipv4_address: "192.168.0.254"
+    volumes:
+      - ./data:/var/lib/cloudflare-warp
+
+networks:
+  warpnet:
+      driver: bridge
+      ipam:
+          driver: default
+          config:
+              - subnet: "192.168.0.0/24"
+                gateway: "192.168.0.1"
